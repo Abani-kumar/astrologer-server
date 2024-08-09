@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDb from "./utils/connectDb.js";
 import routes from "./routes/astrologer.routes.js";
+import cloudinaryConnect from "./utils/cloudinary.js";
+import fileUpload from "express-fileupload";
 dotenv.config({
   path: "./.env",
 });
@@ -11,6 +13,12 @@ const app = express();
 
 app.use(express.json());
 
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 app.use(
   cors({
@@ -31,3 +39,5 @@ app.listen(PORT, () => {
 });
 
 connectDb();
+
+cloudinaryConnect();
