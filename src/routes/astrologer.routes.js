@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 router.get("/astrologers", getAllAstrologers);
-router.get("/astrologers?search", getAstrologerDetails);
+router.get("/astrologers/:id", getAstrologerDetails);
 router.get("/astrologers/search/:search", searchAstrologers);
 router.post("/astrologers", addAstrologer);
 router.patch("/astrologers/:id", updateAstrologer);
