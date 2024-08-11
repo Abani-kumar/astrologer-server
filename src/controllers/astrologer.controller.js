@@ -34,19 +34,13 @@ export const addAstrologer = async (req, res) => {
         .json({ success: false, message: "Astrologer already exists" });
     }
 
-    const profilePic_url = await uploadImage(profilePic);
-    if (!profilePic_url)
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to upload image" });
-
     const astrologer = new Astrologer({
       username,
       language,
       expertise,
       experience,
       price,
-      profilePic: profilePic_url.secure_url,
+      profilePic,
       description,
     });
     await astrologer.save();
@@ -185,8 +179,7 @@ export const updateAstrologer = async (req, res) => {
     if (experience) astrologer.experience = experience;
     if (price) astrologer.price = price;
     if (profilePic) {
-      const result = await uploadImage(profilePic);
-      astrologer.profilePic = result.secure_url;
+      astrologer.profilePic = profilePic;
     }
     await astrologer.save();
     return res
@@ -215,3 +208,19 @@ export const deleteAstrologer = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const imageUpload=async(req,res)=>{
+  try {
+    const profilePic =req.files.profilePic;
+    console.log("profile pic",profilePic)
+    const profilePic_url = await uploadImage(profilePic,"astrologers",400,70);
+    if (!profilePic_url)
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to upload image" });
+
+    return res.status(200).json({ success: true, profilePic_url });
+  } catch (error) {
+    console.log(error);
+  }
+}
