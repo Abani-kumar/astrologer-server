@@ -69,18 +69,21 @@ export const getAllAstrologers = async (req, res) => {
     const query = {};
 
     if (req.query.language) {
-      const languages = req.query.language.split("+").map((lang) => {
-        return lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase();
-      });
-      query.language = { $in: languages };
-      console.log("aba ", languages);
+      const languages = req.query.language
+        .split("+")
+        .map(
+          (lang) => lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase()
+        );
+      query.$or.push({ language: { $in: languages } });
     }
-
     if (req.query.expertise) {
-      const expertises = req.query.expertise.split("+").map((expert) => {
-        return expert.charAt(0).toUpperCase() + expert.slice(1).toLowerCase();
-      });
-      query.expertise = { $in: expertises };
+      const expertises = req.query.expertise
+        .split("+")
+        .map(
+          (expert) =>
+            expert.charAt(0).toUpperCase() + expert.slice(1).toLowerCase()
+        );
+      query.$or.push({ expertise: { $in: expertises } });
     }
 
     const astrologers = await Astrologer.find(query, { description: 0 })
@@ -209,11 +212,16 @@ export const deleteAstrologer = async (req, res) => {
   }
 };
 
-export const imageUpload=async(req,res)=>{
+export const imageUpload = async (req, res) => {
   try {
-    const profilePic =req.files.profilePic;
-    console.log("profile pic",profilePic)
-    const profilePic_url = await uploadImage(profilePic,"astrologers",400,70);
+    const profilePic = req.files.profilePic;
+    console.log("profile pic", profilePic);
+    const profilePic_url = await uploadImage(
+      profilePic,
+      "astrologers",
+      400,
+      70
+    );
     if (!profilePic_url)
       return res
         .status(500)
@@ -223,4 +231,4 @@ export const imageUpload=async(req,res)=>{
   } catch (error) {
     console.log(error);
   }
-}
+};
