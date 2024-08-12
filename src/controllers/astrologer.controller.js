@@ -66,16 +66,18 @@ export const getAllAstrologers = async (req, res) => {
     }
 
     const skip = limit * (page - 1);
-    const query = {};
-
+    const query = { $or: [] }; 
     if (req.query.language) {
       const languages = req.query.language
         .split("+")
         .map(
           (lang) => lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase()
         );
+
       query.$or.push({ language: { $in: languages } });
     }
+
+    
     if (req.query.expertise) {
       const expertises = req.query.expertise
         .split("+")
@@ -83,7 +85,11 @@ export const getAllAstrologers = async (req, res) => {
           (expert) =>
             expert.charAt(0).toUpperCase() + expert.slice(1).toLowerCase()
         );
+
       query.$or.push({ expertise: { $in: expertises } });
+    }
+    if (query.$or.length === 0) {
+      query.$or.push({});
     }
 
     const astrologers = await Astrologer.find(query, { description: 0 })
