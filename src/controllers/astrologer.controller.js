@@ -70,24 +70,28 @@ export const getAllAstrologers = async (req, res) => {
     const query = {};
 
     if (req.query.language) {
-      query.language = {
-        $in: req.query.language
-          .split("+")
-          .map(
-            (lang) => lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase()
-          ),
-      };
+      const languages = req.query.language
+        .split("+")
+        .map(
+          (lang) => lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase()
+        );
+      console.log("Processed languages:", languages);
+      if (languages.length > 0) {
+        query.language = { $in: languages };
+      }
     }
 
     if (req.query.expertise) {
-      query.expertise = {
-        $in: req.query.expertise
-          .split("+")
-          .map(
-            (expert) =>
-              expert.charAt(0).toUpperCase() + expert.slice(1).toLowerCase()
-          ),
-      };
+      const expertises = req.query.expertise
+        .split("+")
+        .map(
+          (expert) =>
+            expert.charAt(0).toUpperCase() + expert.slice(1).toLowerCase()
+        );
+      console.log("Processed expertises:", expertises);
+      if (expertises.length > 0) {
+        query.expertise = { $in: expertises };
+      }
     }
 
     const astrologers = await Astrologer.find(query, { description: 0 })
