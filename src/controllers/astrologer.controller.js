@@ -109,6 +109,7 @@ export const getAllAstrologers = async (req, res) => {
   }
 };
 
+
 export const getAstrologerDetails = async (req, res) => {
   try {
     const astrologerId = req.params.id;
