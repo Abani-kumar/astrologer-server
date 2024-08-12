@@ -72,9 +72,7 @@ export const getAllAstrologers = async (req, res) => {
     if (req.query.language) {
       const languages = req.query.language
         .split("+")
-        .map(
-          (lang) => lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase()
-        );
+        .map(lang => new RegExp(lang.trim(), 'i'));
       console.log("Processed languages:", languages);
       if (languages.length > 0) {
         query.language = { $in: languages };
@@ -84,10 +82,7 @@ export const getAllAstrologers = async (req, res) => {
     if (req.query.expertise) {
       const expertises = req.query.expertise
         .split("+")
-        .map(
-          (expert) =>
-            expert.charAt(0).toUpperCase() + expert.slice(1).toLowerCase()
-        );
+        .map(expert => new RegExp(expert.trim(), 'i'));
       console.log("Processed expertises:", expertises);
       if (expertises.length > 0) {
         query.expertise = { $in: expertises };
