@@ -72,20 +72,24 @@ export const getAllAstrologers = async (req, res) => {
     if (req.query.language) {
       const languages = req.query.language
         .split("+")
-        .map((lang) => new RegExp(lang.trim(), "i"));
+        .flatMap((lang) => lang.split(" "))
+        .map((lang) => new RegExp(lang.trim(), "i"))
+        .filter((lang) => lang.source !== "");
       console.log("Processed languages:", languages);
       if (languages.length > 0) {
-        query.language = { $in: languages };
+        query.language = { $all: languages };
       }
     }
 
     if (req.query.expertise) {
       const expertises = req.query.expertise
         .split("+")
-        .map((expert) => new RegExp(expert.trim(), "i"));
+        .flatMap((expert) => expert.split(" "))
+        .map((expert) => new RegExp(expert.trim(), "i"))
+        .filter((expert) => expert.source !== "");
       console.log("Processed expertises:", expertises);
       if (expertises.length > 0) {
-        query.expertise = { $in: expertises };
+        query.expertise = { $all: expertises };
       }
     }
 
